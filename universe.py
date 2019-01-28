@@ -8,12 +8,14 @@ import queue
 import matplotlib.pyplot as plt
 import time
 from pathlib import Path
+import os
+
 
 # my scripts
 from individual import Individual
 import problem
 import selections
-
+seed_list = {}
 
 def evaluator_queue():
     pass
@@ -91,6 +93,9 @@ def create_universe(input_data, labels, population_size=100, universe_seed=9, nu
     GENERATION_LIMIT = problem.generation_limit #199
     SCORE_MIN = problem.score_min #1e-1
     start_time = time.time()
+    newpath = r'outputs/seed%i/' % (universe_seed)
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)
     while (not converged) & (generation<=GENERATION_LIMIT):
         generation += 1
         #population, eval_queue = run_universe(population, eval_queue num_mutants, num_offpsring)
@@ -105,10 +110,28 @@ def create_universe(input_data, labels, population_size=100, universe_seed=9, nu
             converged = True
         else:
             pass
+
+        sample_best = population[np.random.choice(a=np.where(np.min(scores)==scores)[0], size=1)[0]]
+        filename = 'outputs/seed%i/seed%i.txt' % (universe_seed,universe_seed)
+        file = open(filename,"a")
+        file.write("\n\ngeneration  " + str(generation) + " score: " + str(sample_best.fitness.values) + "\n")
+        file.write(str(sample_best.skeleton[1]["block_object"].active_nodes)+ "\n")
+        file.write("number of active nodes " + str(len(sample_best.skeleton[1]["block_object"].active_nodes)) + "\n")
+        for index in sample_best.skeleton[1]["block_object"].active_nodes:
+            if(index > 0) and index < sample_best.skeleton[1]["block_object"].genome_main_count:
+                function = sample_best.skeleton[1]["block_object"][index]['ftn']
+                node_input_indices = sample_best.skeleton[1]["block_object"][index]["inputs"]
+                node_arg_indices = sample_best.skeleton[1]["block_object"][index]["args"]
+                file.write(str(function) + "    " + str(node_input_indices) + "    " + str(node_arg_indices) + "\n")
+        file.close()
+        generation_analysis = {}
+        generation_analysis["sample_best"] = sample_best
+        fn = 'outputs/seed%i/seed%i_gen%i.npy' % (universe_seed, universe_seed, generation)
+        np.save(fn, generation_analysis)
+
         if (generation%10 == 0) or (converged):
             # plot
             #import pdb; pdb.set_trace()
-            sample_best = population[np.random.choice(a=np.where(np.min(scores)==scores)[0], size=1)[0]]
             #sample_best = population[np.where(np.min(scores)==scores)[0][0]]
             plt.figure()
             plt.plot(problem.x_train[1], problem.y_train, '.')
@@ -117,8 +140,14 @@ def create_universe(input_data, labels, population_size=100, universe_seed=9, nu
             #plt.legend(['Weibull','Test Model Fit'])
             plt.legend(['log(x)','Test Model Fit'])
             #plt.show()
-            Path('outputs').mkdir(parents=True, exists=True) #should help work on all OS
-            filepath = Path('outputs/seed%i_gen%i.png' % (universe_seed, generation))
+            # Path('outputs').mkdir(parents=True, exists=True) #should help work on all OS
+            filepath = Path('outputs/seed%i/seed%i_gen%i.png' % (universe_seed,universe_seed, generation))
             plt.savefig(filepath)
             plt.close()
+
+    seed_list["generation"] = generation
+    seed_list["converged"] = converged
+    seed_list["ending universe"] = time.time()-start_time
+    seed_fn = 'outputs/seedlist%i.npy' % (universe_seed)
+    np.save(seed_fn, seed_list)
     print("ending universe", time.time()-start_time)

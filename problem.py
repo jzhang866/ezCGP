@@ -43,7 +43,7 @@ skeleton_block = { #this skeleton defines a SINGLE BLOCK of a genome
         #declare which primitives are available to the genome,
         #and assign a 'prob' so that you can control how likely a primitive will be used;
         #prob: float btwn 0 and 1 -> assigns that prob to that primitive...the sum can't be more than 1
-        #prob: 1 -> equally distribute the remaining probability amoung all those remaining (hard to explain, sorry) 
+        #prob: 1 -> equally distribute the remaining probability amoung all those remaining (hard to explain, sorry)
         operators.add_ff2f: {'prob': 1},
         operators.add_fa2a: {'prob': 1},
         operators.add_aa2a: {'prob': 1},
@@ -68,7 +68,7 @@ skeleton_block = { #this skeleton defines a SINGLE BLOCK of a genome
     'operator_dict': operators.operDict, #further defines what datatypes what arguments are required for each primitive
     'block_input_dtypes': [np.float64, np.ndarray], #placeholder datatypes so that the genome can be built off datatypes instead of real data
     'block_outputs_dtypes': [np.ndarray],
-    'block_main_count': 40,
+    'block_main_count': 20,
     'block_arg_count': 2, #not used...no primitives require arguments
     'block_mut_prob': 1, #mutate genome with probability 1...always
     'block_mate_prob': 0 #mate with probability 0...never

@@ -26,7 +26,7 @@ class Block(Mate, Mutate):
     def __init__(self, nickname,
                  setup_dict_ftn, setup_dict_arg, setup_dict_mate, setup_dict_mut,
                  operator_dict, block_input_dtypes, block_outputs_dtypes, block_main_count, block_arg_count,
-                 block_mut_prob, block_mate_prob, 
+                 block_mut_prob, block_mate_prob,
                  tensorblock_flag=False, learning_required=False, num_classes=None):
         # TODO consider changing ftn_dict, arg_dict, etc to setup_dict_ftn, setup_dict_mate, etc
         # and then change gene_dict back to oper_dict or ftn_dict
@@ -58,7 +58,7 @@ class Block(Mate, Mutate):
         self.name = nickname
         self.tensorblock_flag = tensorblock_flag
         self.logs_path = tempfile.mkdtemp()
-        self.learning_required = learning_required # 
+        self.learning_required = learning_required #
         self.num_classes = 10 # number of classes for what we are trying to classify...only relevant if there is supposed to be a learner
         self.need_evaluate = True # all new blocks need to be evaluated
 
@@ -74,7 +74,7 @@ class Block(Mate, Mutate):
         self.ftn_weights = self.buildWeights('ftn_methods', setup_dict_ftn)
         self.operator_dict = operator_dict
         self.fillGenome(operator_dict)
-        
+
         # Block - Evaluation
         self.resetEvalAttr()
 
@@ -248,4 +248,3 @@ class Block(Mate, Mutate):
             #self.evaluated = None # clear up some space by deleting eval from memory
             self.need_evaluate = False
             gc.collect()
-
