@@ -112,6 +112,10 @@ def create_universe(input_data, labels, population_size=100, universe_seed=9, nu
             pass
 
         sample_best = population[np.random.choice(a=np.where(np.min(scores)==scores)[0], size=1)[0]]
+        """
+        Under each seedxx folder, we have seedxx_genxx.npy saving sample_best individuals, and seed%i.txt with each
+        generation's information (function, inputs, arguments)
+        """
         filename = 'outputs/seed%i/seed%i.txt' % (universe_seed,universe_seed)
         file = open(filename,"a")
         file.write("\n\ngeneration  " + str(generation) + " score: " + str(sample_best.fitness.values) + "\n")
@@ -145,6 +149,9 @@ def create_universe(input_data, labels, population_size=100, universe_seed=9, nu
             plt.savefig(filepath)
             plt.close()
 
+    """
+    save the generation, converged, and ending universe in seed_list dictionary
+    """
     seed_list["generation"] = generation
     seed_list["converged"] = converged
     seed_list["ending universe"] = time.time()-start_time
